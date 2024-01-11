@@ -1,19 +1,19 @@
+import { Either, SuccessfulResponse, left, right } from '@infra/either';
+import { BadRequestError, InternalServerError } from '@infra/errors/http_errors';
+import { PrismaOptionsInterface } from '@main/interfaces/prisma.interface';
+import { FarmerModel, PrismaClient } from '@prisma/client';
 import {
   IndexRequestInterface,
   IndexResponseInterface,
   ListRequestInterface,
   ListResponseInterface,
 } from '@shared/repository/repository.interface';
-import { BadRequestError, InternalServerError } from '@infra/errors/http_errors';
-import { PrismaOptionsInterface } from '@main/interfaces/prisma.interface';
-import { Either, SuccessfulResponse, left, right } from '@infra/either';
-import { FarmerModel, PrismaClient } from '@prisma/client';
 
-import { FarmRepositoryInterface } from './farm.repository.interface';
+import { AppError } from '@infra/errors';
 import { CropMap, FarmMap } from '@main/maps/farm.map';
 import { Crop } from '../domains/crop.domain';
 import { Farm } from '../domains/farm.domain';
-import { AppError } from '@infra/errors';
+import { FarmRepositoryInterface } from './farm.repository.interface';
 
 export class FarmRepository implements FarmRepositoryInterface {
   static instance: FarmRepository;
@@ -237,7 +237,6 @@ export class FarmRepository implements FarmRepositoryInterface {
 
       return right(new SuccessfulResponse(item));
     } catch (error) {
-      console.log(error);
       return left(new InternalServerError('Error on update farm'));
     }
   }

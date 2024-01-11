@@ -13,6 +13,10 @@ jobs:
           install-yarn: true
           node-version: '16.13'
       - run: node --version
+      - run: 
+          name: Install Dependencies
+          command: npm install
+          working_directory: ./app
       - run:
           name: Run Tests
           command: npm run test

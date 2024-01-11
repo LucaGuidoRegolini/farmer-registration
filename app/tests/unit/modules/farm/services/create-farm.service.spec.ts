@@ -1,18 +1,18 @@
+import { SuccessfulResponse } from '@infra/either';
+import { InvalidDocumentError } from '@infra/errors/domain_error';
+import { BadRequestError } from '@infra/errors/http_errors';
+import { Crop } from '@modules/farm/domains/crop.domain';
+import { Farm } from '@modules/farm/domains/farm.domain';
+import { Farmer } from '@modules/farm/domains/farmer.domain';
+import { CreateFarmService } from '@modules/farm/services/create-farm.service';
+import { User } from '@modules/user/domains/user.domain';
+import { Document } from '@shared/valueObjects/document';
 import {
   mockFarmRepository,
   mockFarmerRepository,
   mockUserRepository,
 } from '@tests/doubles/repositories/in-memory.repository';
-import { CreateFarmService } from '@modules/farm/services/create-farm.service';
-import { InvalidDocumentError } from '@infra/errors/domain_error';
-import { Farmer } from '@modules/farm/domains/farmer.domain';
-import { BadRequestError } from '@infra/errors/http_errors';
-import { Crop } from '@modules/farm/domains/crop.domain';
-import { Farm } from '@modules/farm/domains/farm.domain';
-import { User } from '@modules/user/domains/user.domain';
-import { Document } from '@shared/valueObjects/document';
 import { rightResponse } from '@tests/mocks/responses';
-import { SuccessfulResponse } from '@infra/either';
 
 describe('Create farm service', () => {
   let createFarmService: CreateFarmService;
@@ -141,8 +141,6 @@ describe('Create farm service', () => {
 
     const new_farm = farmCreated.value as BadRequestError;
 
-    console.log(new_farm);
-
     expect(farmCreated.isLeft()).toBeTruthy();
     expect(new_farm).toBeInstanceOf(BadRequestError);
     expect(new_farm.message).toBe(
@@ -258,8 +256,6 @@ describe('Create farm service', () => {
     const farmCreated = await createFarmService.execute(farm_data);
 
     const new_farm = farmCreated.map((farm) => farm);
-
-    console.log(new_farm);
 
     expect(farmCreated.isRight()).toBeTruthy();
     expect(new_farm.document).toBe(farm_data.document);
