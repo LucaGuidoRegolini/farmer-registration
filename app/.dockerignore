@@ -1,0 +1,17 @@
+node_modules
+
+.env
+yarn-error.log
+yarn.lock
+
+.prettierrc.json
+.editorconfig
+.eslintignore
+.eslintrc.json
+
+docker-compose.yml
+
+
+reports
+dist
+tests

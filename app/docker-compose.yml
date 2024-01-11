@@ -1,0 +1,30 @@
+version: '3.7'
+
+services:
+  database-container:
+    image: postgres:alpine
+    restart: always
+    container_name: database-container
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: development
+    ports:
+      - 5432:5432
+
+  project:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - DATABASE_URL=postgres://postgres:postgres@database-container:5432/development
+        - JWT_SECRET=secret
+    container_name: project
+    ports:
+      - 3000:1000
+    depends_on:
+      - database-container
+
+networks:
+  default:
+    driver: bridge

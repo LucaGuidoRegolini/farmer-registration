@@ -1,0 +1,13 @@
+{
+  "plugins": ["prettier-plugin-sort-imports"],
+  "semi": true,
+  "end_of_line": "lf",
+  "singleQuote": true,
+  "printWidth": 90,
+  "tabWidth": 2,
+  "trailingComma": "all",
+  "arrowParens": "always",
+  "bracketSpacing": true,
+  "unusedImports": true,
+  "importOrder": ["^\\u0000", "^@?\\w", "^[^.]"]
+}

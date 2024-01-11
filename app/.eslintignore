@@ -1,0 +1,6 @@
+/*.js
+node_modules
+dist
+reports
+.stryker-tmp
+src/infra/grpc/proto/builds/*

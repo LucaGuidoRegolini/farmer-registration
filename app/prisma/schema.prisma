@@ -1,0 +1,55 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL") // e.g. postgresql://johndoe:johndoe@localhost:5432/mydb
+}
+
+model UserModel {
+  id        String      @id @unique @default(uuid())
+  name      String     @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  farmers     FarmerModel[]
+  farms     FarmModel[]
+}
+
+model FarmerModel {
+  id        String      @id @unique @default(uuid())
+  name      String
+  document  String
+  userId    String
+  user      UserModel     @relation(fields: [userId], references: [id])
+  farms     FarmModel[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model FarmModel {
+  id        String      @id @unique @default(uuid())
+  name      String
+  city      String
+  state     String
+  total_area Float
+  total_agricultural_area Float
+  total_vegetation_area Float
+  planted_crop CropModel[]
+  farmenId  String
+  farmen    FarmerModel   @relation(fields: [farmenId], references: [id])
+  userId    String
+  user      UserModel     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CropModel {
+  id        String      @id @unique @default(uuid())
+  name      String  @unique
+  farms    FarmModel[]
+}

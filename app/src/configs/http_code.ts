@@ -1,0 +1,23 @@
+export const http_client_code_errors = {
+  BAD_REQUEST_ERROR: 400,
+  UNAUTHORIZED_ERROR: 401,
+  FORBIDDEN_ERROR: 403,
+  NOT_FOUND_ERROR: 404,
+  METHOD_NOT_ALLOWED_ERROR: 405,
+  NOT_ACCEPTABLE_ERROR: 406,
+  CONFLICT_ERROR: 409,
+};
+
+export const http_server_code_errors = {
+  INTERNAL_SERVER_ERROR: 500,
+  NOT_IMPLEMENTED_ERROR: 501,
+  BAD_GATEWAY_ERROR: 502,
+  SERVICE_UNAVAILABLE_ERROR: 503,
+  GATEWAY_TIMEOUT_ERROR: 504,
+};
+
+export const http_success_code = {
+  OK: 200,
+  CREATED: 201,
+  NO_CONTENT: 204,
+};

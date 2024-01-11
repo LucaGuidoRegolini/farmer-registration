@@ -1,0 +1,40 @@
+{
+  "compilerOptions": {
+    "resolveJsonModule": true,
+    "target": "ES2022",
+    "module": "commonjs",
+    "outDir": "./dist",
+    "rootDir": "./",
+    "sourceMap": true,
+    "strict": true,
+    "strictPropertyInitialization": false,
+    "baseUrl": "./",
+    "paths": {
+      "@infra/*": ["./src/infra/*"],
+      "@shared/*": ["./src/shared/*"],
+      "@modules/*": ["./src/modules/*"],
+      "@configs/*": ["./src/configs/*"],
+      "@main/*": ["./src/main/*"],
+      "@factories/*": ["./src/main/factories/*"],
+      "@maps/*": ["./src/main/maps/*"],
+      "@adapters/*": ["./src/main/adapters/*"],
+      "@interfaces/*": ["./src/shared/interfaces/*"],
+      "@utils/*": ["./src/shared/utils/*"],
+      "@tests/*": ["./tests/*"]
+    },
+    "typeRoots": ["./node_modules/@types", "./src/@types"],
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "exclude": [
+    "jest.config.ts",
+    "jest-setup-file.ts",
+    "ormconfig.ts",
+    "node_modules",
+    "dist",
+    "src/@types"
+  ]
+}
