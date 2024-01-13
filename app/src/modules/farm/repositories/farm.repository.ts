@@ -1,19 +1,19 @@
-import { Either, SuccessfulResponse, left, right } from '@infra/either';
-import { BadRequestError, InternalServerError } from '@infra/errors/http_errors';
-import { PrismaOptionsInterface } from '@main/interfaces/prisma.interface';
-import { FarmerModel, PrismaClient } from '@prisma/client';
 import {
   IndexRequestInterface,
   IndexResponseInterface,
   ListRequestInterface,
   ListResponseInterface,
 } from '@shared/repository/repository.interface';
+import { BadRequestError, InternalServerError } from '@infra/errors/http_errors';
+import { PrismaOptionsInterface } from '@main/interfaces/prisma.interface';
+import { Either, SuccessfulResponse, left, right } from '@infra/either';
+import { FarmerModel, PrismaClient } from '@prisma/client';
 
-import { AppError } from '@infra/errors';
+import { FarmRepositoryInterface } from './farm.repository.interface';
 import { CropMap, FarmMap } from '@main/maps/farm.map';
 import { Crop } from '../domains/crop.domain';
 import { Farm } from '../domains/farm.domain';
-import { FarmRepositoryInterface } from './farm.repository.interface';
+import { AppError } from '@infra/errors';
 
 export class FarmRepository implements FarmRepositoryInterface {
   static instance: FarmRepository;
@@ -179,17 +179,20 @@ export class FarmRepository implements FarmRepositoryInterface {
     try {
       const planted_crops = item.crops.map((crop) => CropMap.domainToPrisma(crop));
 
+      const planted_crops_id = planted_crops.map((crop) => ({ id: crop.id }));
+
       const farm = FarmMap.domainToPrisma(item);
       await this._prisma.farmModel.create({
         data: {
           ...farm,
           planted_crop: {
-            connect: planted_crops,
+            connect: planted_crops_id,
           },
         },
       });
       return right(SuccessfulResponse.success(item));
     } catch (error) {
+      console.log(error);
       return left(new InternalServerError('Error on create farm'));
     }
   }

@@ -147,6 +147,8 @@ na rota **Login user** dentro da pasta **User** você poderá fazer isso.
 
 Uma vez logado, esta tudo pronto para criar a primeira fazenda, sera necessário o nome nome do fazendeiro e seu documento (CPF/CNPJ), além dos dados da fazenda, sendo o nome, estado, cidade, as áreas e as culturas plantadas.
 
+> as plantações validas (crops) são -  'Soja','Milho','Algodão','Cana de Açucar' ou 'Café' se você quiser plantar outra coisa então essa API não é para você
+
 na rota **Create farm** dentro da pasta **Farm** você poderá fazer isso.
 
 ![](/imagens/3_step_create_farm.PNG)
