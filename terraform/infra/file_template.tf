@@ -62,11 +62,11 @@ data "template_file" "init" {
       shell: "aws ecr get-authorization-token --region ${var.AWS_REGION}
       register: ecr_command
 
-    - set_fact:
-        ecr_credentials: "{{ (ecr_authorization_data.authorizationToken | b64decode).split(':') | default([]) }}"
+     - set_fact:
+        ecr_authorization_data: "{{ (ecr_command.stdout | from_json).authorizationData[0] }}"
 
     - set_fact:
-        ecr_credentials: "{{ (ecr_authorization_data.authorizationToken | b64decode).split(':') | default([]) }}"
+        ecr_credentials: "{{(ecr_authorization_data.authorizationToken | b64decode).split(':') | default([])}}"
 
     - name: docker_repository - Log into ECR registry and force re-authorization
       docker_login:
@@ -85,7 +85,7 @@ data "template_file" "init" {
         pull: yes
         restart_policy: always
         ports:
-          - "3000:3000"
+          - "${var.aplication_port}:${var.aplication_port}"
 EOT
 
     ansible-playbook playbook.yml -i "localhost," -c local 
