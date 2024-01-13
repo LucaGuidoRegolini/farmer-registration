@@ -5,3 +5,11 @@
 
 */yarn.lock
 */.env
+
+*.tfvars
+.terraform
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+*.lock.hd

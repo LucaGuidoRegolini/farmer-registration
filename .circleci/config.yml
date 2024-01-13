@@ -11,9 +11,9 @@ jobs:
       - checkout
       - node/install:
           install-yarn: true
-          node-version: '16.13'
+          node-version: "16.13"
       - run: node --version
-      - run: 
+      - run:
           name: Install Dependencies
           command: npm install
           working_directory: ./app
@@ -22,12 +22,144 @@ jobs:
           command: npm run test
           working_directory: ./app
 
+  push-to-ecr:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Install AWS CLI
+          command: sudo apt-get update && sudo apt-get install awscli
+      - run:
+          name: Config AWS account
+          command: aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID && aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY && aws configure set default.region $AWS_REGION
+      - run:
+          name: Authenticate with ECR
+          command: aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_USER_ID.dkr.ecr.$AWS_REGION.amazonaws.com/farmer-register
+      - run:
+          name: Build Docker Image
+          command: docker build --build-arg JWT_SECRET=$APP_SECRET --build-arg APP_PORT=3000 --build-arg DATABASE_URL=$DATABASE_URL -t app:latest .
+          working_directory: ./app
+      - run:
+          name: Push to ECR
+          command: docker tag app:latest $AWS_USER_ID.dkr.ecr.$AWS_REGION.amazonaws.com/farmer-register:latest && docker push $AWS_USER_ID.dkr.ecr.$AWS_REGION.amazonaws.com/farmer-register:latest
+
+  run-terraform-production:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - setup_remote_docker
+
+      - run:
+          name: Install Terraform dependencies
+          command: sudo apt-get update && sudo apt-get install -y unzip
+
+      - run:
+          name: Install Terraform
+          command: curl -fsSL https://releases.hashicorp.com/terraform/1.6.5/terraform_1.6.5_linux_amd64.zip -o terraform.zip && sudo unzip terraform.zip -d /usr/local/bin
+
+      - run:
+          name: Terraform version
+          command: terraform --version
+
+      - run:
+          name: Install AWS CLI
+          command: sudo apt-get update && sudo apt-get install awscli
+
+      - run:
+          name: Config AWS account
+          command: aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID && aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY && aws configure set default.region $AWS_REGION
+
+      - run:
+          name: Terraform init
+          command: terraform init
+          working_directory: ./terraform/enviroment/production
+
+      - run:
+          name: Create Terraform variables.tfvars
+          command: |
+            rm -rf variables.tfvars
+            echo "TF_VAR_ssh_key_public = "$TF_VAR_SSH_KEY_PUBLIC"" > variables.tfvars
+            echo "TF_VAR_AWS_REGION = "$AWS_REGION"" >> variables.tfvars
+            echo "TF_VAR_AWS_ACCESS_KEY_ID = "$AWS_ACCESS_KEY_ID"" >> variables.tfvars
+            echo "TF_VAR_AWS_SECRET_ACCESS_KEY = "$AWS_SECRET_ACCESS_KEY"" >> variables.tfvars
+            echo "TF_VAR_AWS_USER_ID = "$AWS_USER_ID"" >> variables.tfvars
+          working_directory: ./terraform/enviroment/production
+      - run:
+          name: Terraform plan
+          command: terraform apply -var-file=variables.tfvars
+          working_directory: ./terraform/enviroment/production
+      - run:
+          name: Terraform apply
+          command: terraform apply -var-file=variables.tfvars
+          working_directory: ./terraform/enviroment/production
+
+  run-terraform-develop:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - setup_remote_docker
+
+      - run:
+          name: Install Terraform dependencies
+          command: sudo apt-get update && sudo apt-get install -y unzip
+
+      - run:
+          name: Install Terraform
+          command: curl -fsSL https://releases.hashicorp.com/terraform/1.6.5/terraform_1.6.5_linux_amd64.zip -o terraform.zip && sudo unzip terraform.zip -d /usr/local/bin
+
+      - run:
+          name: Terraform version
+          command: terraform --version
+
+      - run:
+          name: Install AWS CLI
+          command: sudo apt-get update && sudo apt-get install awscli
+
+      - run:
+          name: Config AWS account
+          command: aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID && aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY && aws configure set default.region $AWS_REGION
+
+      - run:
+          name: Terraform init
+          command: terraform init
+          working_directory: ./terraform/enviroment/develop
+
+      - run:
+          name: Create Terraform variables.tfvars
+          command: |
+            rm -rf variables.tfvars
+            echo "TF_VAR_ssh_key_public = "$TF_VAR_SSH_KEY_PUBLIC"" > variables.tfvars
+            echo "TF_VAR_AWS_REGION = "$AWS_REGION"" >> variables.tfvars
+            echo "TF_VAR_AWS_ACCESS_KEY_ID = "$AWS_ACCESS_KEY_ID"" >> variables.tfvars
+            echo "TF_VAR_AWS_SECRET_ACCESS_KEY = "$AWS_SECRET_ACCESS_KEY"" >> variables.tfvars
+            echo "TF_VAR_AWS_USER_ID = "$AWS_USER_ID"" >> variables.tfvars
+          working_directory: ./terraform/enviroment/develop
+      - run:
+          name: Terraform plan
+          command: terraform apply -var-file=variables.tfvars
+          working_directory: ./terraform/enviroment/develop
+      - run:
+          name: Terraform apply
+          command: terraform apply -var-file=variables.tfvars
+          working_directory: ./terraform/enviroment/develop
+
 workflows:
   deploy-workflow:
     jobs:
-      - test:
+      - test
+      - push-to-ecr:
+          requires:
+            - test
           filters:
             branches:
-              only:
-                - master
-    
+              only: master
+      - run-terraform-production:
+          requires:
+            - push-to-ecr
+          filters:
+            branches:
+              only: master

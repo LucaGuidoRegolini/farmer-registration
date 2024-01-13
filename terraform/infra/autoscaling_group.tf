@@ -10,6 +10,7 @@ resource "aws_autoscaling_group" "autoscaling_group" {
   }
   depends_on = [ aws_launch_template.app_template ]
   target_group_arns = [aws_lb_target_group.load_balance_target_project[0].arn]
+  count = var.is_prduction ? 1 : 0
 }
 
 # Autoscaling Policy - the autoscaling policy is the policy that will scale the instances
@@ -24,6 +25,6 @@ resource "aws_autoscaling_policy" "autoscaling_policy" {
     target_value = 50.0
   }
   depends_on = [ aws_autoscaling_group.autoscaling_group ]
-  count = 1
+  count = var.is_prduction ? 1 : 0
 }
 

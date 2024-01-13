@@ -15,59 +15,9 @@ resource "aws_iam_role" "ec2_access_ecr" {
     }]
   })
 }
-
-resource "aws_iam_role" "auto_scale_access_ecr" {
-  name = "${var.aplication-name}-access_ecr_auto_scale"
-
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [{
-      Action = "sts:AssumeRole",
-      Effect = "Allow",
-      Principal = {
-        Service = [
-            "ec2.amazonaws.com"
-            
-        ]
-      }
-    }]
-  })
-}
-  
-resource "aws_iam_role_policy_attachment" "ec2_ecr_read_policy_attachment" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
-  role       = aws_iam_role.ec2_access_ecr.name
-}
-
 resource "aws_iam_role_policy" "ecs_ecr_policy_ec2" {
   name = "ecs_ecr_policy_ec2"
   role = aws_iam_role.ec2_access_ecr.id
-
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action = [
-          "ecr:GetAuthorizationToken",
-          "ecr:BatchCheckLayerAvailability",
-          "ecr:GetDownloadUrlForLayer",
-          "ecr:GetRepositoryPolicy",
-          "ecr:DescribeRepositories",
-          "ecr:ListImages",
-          "ecr:BatchGetImage",
-          "logs:CreateLogStream",
-          "logs:PutLogEvents"
-        ]
-        Effect   = "Allow"
-        Resource = "*"
-      },
-    ]
-  })
-}
-
-resource "aws_iam_role_policy" "ecs_ecr_policy_auto_scale" {
-  name = "ecs_ecr_policy_ec2"
-  role = aws_iam_role.auto_scale_access_ecr.id
 
   policy = jsonencode({
     Version = "2012-10-17"

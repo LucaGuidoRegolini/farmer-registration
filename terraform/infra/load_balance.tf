@@ -3,7 +3,6 @@ resource "aws_lb" "load_balance_project" {
   name = "${var.aplication-name}-${var.environment}"
   internal = false
   subnets  = module.vpc.public_subnets
-  count    = 1
    tags = {
     Name = "${var.aplication-name} Load Balance ${var.environment}"
     Aplication = var.aplication-name
@@ -11,6 +10,8 @@ resource "aws_lb" "load_balance_project" {
     Environment = var.environment
     Terraform: "true"
   }
+
+  count = var.is_prduction ? 1 : 0
 }
 
 
@@ -21,7 +22,7 @@ resource "aws_lb_target_group" "load_balance_target_project" {
   port     = var.aplication_port
   protocol = "HTTP"
   vpc_id   = module.vpc.vpc_id
-  count    = 1
+  count = var.is_prduction ? 1 : 0
 }
 
 # Listener - the listener is the port that will be exposed to the world
@@ -34,7 +35,7 @@ resource "aws_lb_listener" "load_balance_listener_project" {
     type             = "forward"
     target_group_arn = aws_lb_target_group.load_balance_target_project[0].arn
   }
-  count = 1
+  count = var.is_prduction ? 1 : 0
 }
 
 
