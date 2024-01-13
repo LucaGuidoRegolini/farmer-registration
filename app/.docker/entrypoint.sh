@@ -12,6 +12,4 @@ npm run build
 
 rm -rf src
 
-/docker-entrypoint.sh
-
 npm run start

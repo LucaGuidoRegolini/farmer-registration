@@ -120,3 +120,62 @@ para usar pasta entrar no [postman do projeto](https://www.postman.com/lively-ca
 O postman tem 2 ambientes, um para acessar online e outro localmente, caso queira usar localmente escolha **Local**, mas caso queira acessar online use **Develop**
 
 ![](/imagens/postman-config.PNG)
+
+> O postman web não suportar usar o localhost, por isso para que o **Local** funcione sera necessário usar o Postman desktop
+
+## Registrando a primeira fazenda
+
+Ja esta tudo pronto e configurado, tudo que resta é usar a API, para ajudar nisso aqui esta os primeiros passos necessários para registrar sua primeira fazenda
+
+### 1 - Criar um usuário
+
+Na API os dados são separados por usuário, de modo que um usuário não pode ver as fazendas de outro, Por isso é necessário criar um usuário só pra você.
+
+na rota **Create user** dentro da pasta **User** você poderá fazer isso.
+
+![](/imagens/1_step_create_user.PNG)
+
+### 2 - Login na plataforma
+
+Uma vez criado vai ser necessário fazer o login com esse usuário, essa rota ira gerar um **_JSON Web Token_**, um toque que sera usado para autenticar seu usuário nas próximas rotas, o postman vai lidar com esse token pra você automaticamente, mas se para criar uma aplicação web usando a API sera necessário uma atenção especial nesse ponto.
+
+na rota **Login user** dentro da pasta **User** você poderá fazer isso.
+
+![](/imagens/2_step_login_user.PNG)
+
+### 3 - Criar a fazenda
+
+Uma vez logado, esta tudo pronto para criar a primeira fazenda, sera necessário o nome nome do fazendeiro e seu documento (CPF/CNPJ), além dos dados da fazenda, sendo o nome, estado, cidade, as áreas e as culturas plantadas.
+
+na rota **Create farm** dentro da pasta **Farm** você poderá fazer isso.
+
+![](/imagens/3_step_create_farm.PNG)
+
+### 4 -Listar fazendeiros
+
+A fazenda foi criada, conseguimos. Mas só por garantia que tal buscar os dados da fazenda? Vamos começar listando os fazendeiros, essa rota trás uma lista paginada de todos os fazendeiros, nesse caso temos apenas 1.
+
+na rota **List farmer** dentro da pasta **Farm** você poderá fazer isso.
+
+![](/imagens/4_step_lsit_farmer.PNG)
+
+### 5 -Buscar fazenda
+
+Agora com o **id** que veio na resposta da rota anteiros podemos buscar o fazendeiro e sua fazenda, pasta colocar esse **id** no **Params** na **farm_id** como mostra a imagem, e vamos conseguir todos os dados. 
+
+na rota **Get farm** dentro da pasta **Farm** você poderá fazer isso.
+
+![](/imagens/5_step_get_farm.PNG)
+
+### Bonus
+
+Conseguimos confirmar que os dados estão salvos, mas como etapa bonus vamos ver um apanhado geral de todas as nossas fazendas, essa rota trás dados para ter uma visão geral de **TODAS** as fazendas, como só temos uma não ser tão interessante, mas ainda vale a menção honrosa.
+
+na rota **Get farms data** dentro da pasta **Farm** você poderá fazer isso.
+
+![](/imagens/5_step_get_farms_data.PNG)
+
+## Conclusão
+
+O projeto foi muito interessante de ser desenvolvido, apesar de simples foi um grande desafio estruturar a infraestrutura dele na aws através do Terraform e Ansible, com certeza foi um momento de muito aprendizado. Espero que você tenha gostado de ver o meu projeto tanto quanto eu gostei de produzir ele.
+O mundo da tecnologia é vasto em apaixonante, existiam infinitas maneiras para completar esse desafio, mesmo usando as mesmas tecnologias, se gostou da ideia fique a vontade para tentar de outra forma, pode usar o código da forma que quiser.
