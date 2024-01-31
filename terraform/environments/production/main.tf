@@ -8,7 +8,6 @@ module "prod" {
     aplication_port = 3000
     instance_ami_aws = "ami-0fc5d935ebf8bc3bc"
     instance_type_aws = "t2.micro"
-    ssh_key_name =  "farmer-register-ssh_id"
     max_size = 2
     min_size = 1
     is_prduction = true

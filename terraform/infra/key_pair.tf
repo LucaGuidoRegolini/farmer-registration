@@ -1,5 +1,5 @@
 resource "aws_key_pair" "aws_key_pair" {
-  key_name   = var.ssh_key_name
+  key_name   = "${var.aplication-name}-${var.environment}-ssh_id"
   public_key = var.ssh_key_public
 
   tags = {

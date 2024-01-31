@@ -47,11 +47,6 @@ variable "instance_type_aws" {
 variable "instance_ami_aws" {
   type = string
 }
-
-variable "ssh_key_name" {
-  type = string
-}
-
 variable "ssh_key_public" {
   type = string
 }

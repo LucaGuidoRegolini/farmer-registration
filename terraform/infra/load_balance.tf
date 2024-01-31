@@ -11,6 +11,8 @@ resource "aws_lb" "load_balance_project" {
     Terraform: "true"
   }
 
+  security_groups = [aws_security_group.alb.id]
+
   count = var.is_prduction ? 1 : 0
 }
 

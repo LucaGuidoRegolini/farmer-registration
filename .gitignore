@@ -13,3 +13,5 @@
 *.tfstate
 *.tfstate.*
 *.lock.hd
+
+vars.yml

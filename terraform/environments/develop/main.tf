@@ -8,7 +8,6 @@ module "dev" {
     aplication_port = 3000
     instance_ami_aws = "ami-0fc5d935ebf8bc3bc"
     instance_type_aws = "t2.micro"
-    ssh_key_name =  "farmer-register-ssh_id"
     max_size = 1
     min_size = 1
     is_prduction = false
@@ -19,4 +18,3 @@ module "dev" {
     AWS_USER_ID = var.TF_VAR_AWS_USER_ID
     ssh_key_public = var.TF_VAR_ssh_key_public
 }
-

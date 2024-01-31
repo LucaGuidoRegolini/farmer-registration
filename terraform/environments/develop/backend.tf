@@ -1,7 +1,7 @@
 terraform {
   backend "s3" {
     bucket = "terraform-state-farmer-register-project"
-    key    = "prod/terraform.tfstate"
+    key    = "dev/terraform.tfstate"
     region = "us-east-1"
   }
 }

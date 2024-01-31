@@ -1,11 +1,11 @@
 resource "aws_autoscaling_group" "autoscaling_group" {
-  vpc_zone_identifier = module.vpc.public_subnets  # private_subnets
+  vpc_zone_identifier = module.vpc.public_subnets  # for debug change private_subnets -> public_subnets
   name               = "${var.aplication-name}-asg-${var.environment}"
   
   max_size           = var.max_size
   min_size           = var.min_size
   launch_template {
-    id      = aws_launch_template.app_template.id
+    id      = aws_launch_template.app_template[0].id
     version = "$Latest"
   }
   depends_on = [ aws_launch_template.app_template ]

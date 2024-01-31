@@ -1,5 +1,5 @@
-resource "aws_eip" "mundo_invest_lb" {
-  instance = aws_instance.app_server.id
+resource "aws_eip" "project_lb" {
+  instance = aws_instance.app_server[0].id
   domain   = "vpc"
 
  depends_on = [ aws_instance.app_server ]
